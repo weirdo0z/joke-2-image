@@ -147,6 +147,9 @@ async fn joke_image(Query(params): Query<HashMap<String, String>>) -> HttpRespon
 
     HttpResponse::Ok()
         .content_type("image/png")
+        .insert_header(("Cache-Control", "no-store, no-cache, must-revalidate"))
+        .insert_header(("Pragma", "no-cache"))
+        .insert_header(("Expires", "0"))
         .body(Bytes::from(buf.into_inner()))
 }
 
