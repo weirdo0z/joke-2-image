@@ -68,7 +68,7 @@ async fn joke_image(Query(params): Query<HashMap<String, String>>) -> HttpRespon
     let line_height = (scale.y * 1.2) as i32;
     let text_height = (wrapped_text.lines().count() as i32) * line_height;
     let padding = 100; // Top and bottom padding
-    let height = (text_height + padding).max(300); // Minimum height of 400
+    let height = (text_height + padding).max(300); // Minimum height of 300
 
     // Create image with calculated dimensions
     let width = 700;
