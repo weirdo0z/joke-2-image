@@ -53,8 +53,8 @@ async fn joke_image(Query(params): Query<HashMap<String, String>>) -> HttpRespon
     let font = FontArc::try_from_slice(font_data).unwrap();
 
     // Calculate text dimensions
-    let scale = PxScale::from(40.0);
-    let max_width = 700.0 - 50.0; // Account for margins
+    let scale = PxScale::from(25.0);
+    let max_width = 550.0 - 75.0; // Account for margins
     let char_width = scale.x * 0.6; // Approximate character width
     let max_chars = (max_width / char_width) as usize;
 
@@ -68,15 +68,15 @@ async fn joke_image(Query(params): Query<HashMap<String, String>>) -> HttpRespon
     let line_height = (scale.y * 1.2) as i32;
     let text_height = (wrapped_text.lines().count() as i32) * line_height;
     let padding = 100; // Top and bottom padding
-    let height = (text_height + padding).max(300); // Minimum height of 300
+    let height = (text_height + padding).max(200); // Minimum height of 200
 
     // Create image with calculated dimensions
-    let width = 700;
+    let width = 550;
     let mut img = ImageBuffer::from_pixel(width, height as u32, Rgb([30u8, 30u8, 30u8]));
 
     // Draw category tag in upper-right corner
-    let tag_scale = PxScale::from(20.0);
-    let tag_padding = 10;
+    let tag_scale = PxScale::from(15.0);
+    let tag_padding = 5;
     let tag_text = format!(" {} ", category);
 
     // Calculate tag dimensions
@@ -121,6 +121,25 @@ async fn joke_image(Query(params): Query<HashMap<String, String>>) -> HttpRespon
         draw_text_mut(&mut img, color, 50, y, scale, &font, line);
         y += line_height;
     }
+
+    // Draw credit text in bottom-left corner
+    let credit_scale = PxScale::from(13.0);
+    let credit_text = "Thanks, JokeAPI (https://v2.jokeapi.dev)";
+
+    // Calculate credit position
+    let credit_x = 50; // Start from left edge with padding
+    let credit_y = height as i32 - credit_scale.y as i32 - 15;
+
+    // Draw credit text
+    draw_text_mut(
+        &mut img,
+        Rgb([200u8, 200u8, 200u8]), // Light gray color
+        credit_x,
+        credit_y,
+        credit_scale,
+        &font,
+        credit_text,
+    );
 
     // Convert image to bytes
     let mut buf = std::io::Cursor::new(Vec::new());
